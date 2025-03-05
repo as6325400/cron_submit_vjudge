@@ -23,10 +23,10 @@ jobs:
 
       - name: ✅ 設定環境變數
         run: |
-          echo "VJUDGE_USERNAME=${{ secrets.VJUDGE_USERNAME }}" >> $GITHUB_ENV
-          echo "VJUDGE_PASSWORD=${{ secrets.VJUDGE_PASSWORD }}" >> $GITHUB_ENV
-          echo "CONTEST_ID=${{ secrets.CONTEST_ID }}" >> $GITHUB_ENV
-          echo "PROBLEMS='${{ secrets.PROBLEMS }}'" >> $GITHUB_ENV
+          echo "VJUDGE_USERNAME=${{ secrets.VJUDGE_USERNAME }}" >> .env
+          echo "VJUDGE_PASSWORD=${{ secrets.VJUDGE_PASSWORD }}" >> .env
+          echo "CONTEST_ID=${{ secrets.CONTEST_ID }}" >> .env
+          echo "PROBLEMS='${{ secrets.PROBLEMS }}'" >> .env
 
       - name: 🚀 執行提交腳本
         run: python submit.py
