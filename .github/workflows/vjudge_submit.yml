@@ -1,8 +1,11 @@
 name: VJudge Auto Submit
 
 on:
+  push:
+    branches:
+      - main
   schedule:
-    - cron: "*/1 * * * *"  # Runs every minute
+    - cron: "*/5 * * * *"  # Runs every minute
   workflow_dispatch:  # Allows manual trigger
 
 jobs:
