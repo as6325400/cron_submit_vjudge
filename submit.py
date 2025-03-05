@@ -11,6 +11,7 @@ load_dotenv()
 USERNAME = os.getenv("VJUDGE_USERNAME")
 PASSWORD = os.getenv("VJUDGE_PASSWORD")
 CONTEST_ID = os.getenv("CONTEST_ID")
+print(os.getenv("PROBLEMS"))
 PROBLEMS = json.loads(os.getenv("PROBLEMS"))
 print(PROBLEMS)
 
