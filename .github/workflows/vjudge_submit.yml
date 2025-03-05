@@ -2,31 +2,31 @@ name: VJudge Auto Submit
 
 on:
   schedule:
-    - cron: "0 * * * *"  # 每小時執行一次
-  workflow_dispatch:  # 允許手動觸發
+    - cron: "*/1 * * * *"  # Runs every minute
+  workflow_dispatch:  # Allows manual trigger
 
 jobs:
   submit:
     runs-on: ubuntu-latest
 
     steps:
-      - name: ✅ 檢出專案
+      - name: ✅ Checkout Repository
         uses: actions/checkout@v4
 
-      - name: ✅ 設定 Python 環境
+      - name: ✅ Set Up Python Environment
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
-      - name: ✅ 安裝依賴
+      - name: ✅ Install Dependencies
         run: pip install -r requirements.txt
 
-      - name: ✅ 設定環境變數
+      - name: ✅ Set Environment Variables
         run: |
           echo "VJUDGE_USERNAME=${{ secrets.VJUDGE_USERNAME }}" >> .env
           echo "VJUDGE_PASSWORD=${{ secrets.VJUDGE_PASSWORD }}" >> .env
           echo "CONTEST_ID=${{ secrets.CONTEST_ID }}" >> .env
           echo "PROBLEMS='$(echo '${{ secrets.PROBLEMS }}' | jq -c .)'" >> .env
 
-      - name: 🚀 執行提交腳本
+      - name: 🚀 Run Submission Script
         run: python submit.py
