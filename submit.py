@@ -5,7 +5,7 @@ import urllib.parse
 import cloudscraper
 from dotenv import load_dotenv
 
-# 讀取 .env
+# Load .env
 load_dotenv()
 
 USERNAME = os.getenv("VJUDGE_USERNAME")
@@ -15,59 +15,59 @@ print(os.getenv("PROBLEMS"))
 PROBLEMS = json.loads(os.getenv("PROBLEMS"))
 print(PROBLEMS)
 
-# 建立 VJudge Session
+# Create VJudge session
 scraper = cloudscraper.create_scraper()
 
-# 1️⃣ 登入 VJudge
+# 1️⃣ Log in to VJudge
 login_url = "https://vjudge.net/user/login"
 login_data = {"username": USERNAME, "password": PASSWORD}
 login_response = scraper.post(login_url, data=login_data)
 
 if "success" not in login_response.text:
-    print("❌ 登入失敗，請檢查帳號密碼")
+    print("❌ Login failed. Please check your username and password.")
     exit()
 
-print("✅ 登入成功")
+print("✅ Login successful.")
 
-# 2️⃣ 取得 `JSESSIONID`
+# 2️⃣ Retrieve `JSESSIONID`
 cookies = scraper.cookies.get_dict()
 if "JSESSIONID" not in cookies:
-    print("❌ 無法獲取 JSESSIONID，登入可能失敗")
+    print("❌ Failed to retrieve JSESSIONID. Login may have failed.")
     exit()
 
-print(f"✅ 獲取 JSESSIONID: {cookies['JSESSIONID']}")
+print(f"✅ JSESSIONID retrieved: {cookies['JSESSIONID']}")
 
-# 3️⃣ 遍歷要提交的題目
+# 3️⃣ Iterate over problems to submit
 for problem, info in PROBLEMS.items():
     language = info["language"]
     file_path = info["file"]
 
     if not os.path.exists(file_path):
-        print(f"❌ {problem} 題程式碼檔案 {file_path} 不存在，跳過")
+        print(f"❌ Code file {file_path} for problem {problem} does not exist. Skipping.")
         continue
 
-    # 讀取程式碼
+    # Read source code
     with open(file_path, "r", encoding="utf-8") as f:
         source_code = f.read()
 
-    # URL + Base64 編碼
+    # URL + Base64 encode
     encoded_source = base64.b64encode(urllib.parse.quote(source_code).encode()).decode()
 
-    # 4️⃣ 發送提交請求
+    # 4️⃣ Send submission request
     submit_url = f"https://vjudge.net/contest/submit/{CONTEST_ID}/{problem}"
     submit_data = {
         "method": "0",
         "language": language,
         "open": "1",
         "source": encoded_source,
-        "password": ""  # 比賽無密碼則留空
+        "password": ""  # Leave empty if the contest has no password
     }
 
     response = scraper.post(submit_url, data=submit_data, cookies=cookies)
 
-    # 5️⃣ 確認提交成功
+    # 5️⃣ Verify submission success
     if response.status_code == 200 and "success" in response.text:
-        print(f"✅ 題目 {problem} 提交成功！")
+        print(f"✅ Problem {problem} submitted successfully!")
     else:
-        print(f"❌ 題目 {problem} 提交失敗")
+        print(f"❌ Submission failed for problem {problem}.")
         print(response.text)
