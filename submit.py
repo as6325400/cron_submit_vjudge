@@ -12,6 +12,7 @@ USERNAME = os.getenv("VJUDGE_USERNAME")
 PASSWORD = os.getenv("VJUDGE_PASSWORD")
 CONTEST_ID = os.getenv("CONTEST_ID")
 PROBLEMS = json.loads(os.getenv("PROBLEMS"))
+print(PROBLEMS)
 
 # 建立 VJudge Session
 scraper = cloudscraper.create_scraper()
